@@ -222,16 +222,28 @@ module RSpec
 
     private
 
+      def columns
+        @columns ||=
+          begin
+            index = 0
+            @header_line[0..-3].split(' | ').map do |header|
+              start = index
+              length = header.length
+              index += length + 3
+              header = header.rstrip.to_sym
+              [header, start, length]
+            end
+          end
+      end
+
       def parse_row(line)
-        Hash[headers.zip(split_line(line))]
-      end
-
-      def headers
-        @headers ||= split_line(@header_line).grep(/\S/).map(&:to_sym)
-      end
-
-      def split_line(line)
-        line.split(/\s+\|\s+?/, -1)
+        Hash[
+          columns.map do |(header, start, length)|
+            s = line[start, length]
+            s.rstrip!
+            [header, s]
+          end
+        ]
       end
     end
   end
