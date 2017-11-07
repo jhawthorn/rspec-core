@@ -174,15 +174,18 @@ module RSpec
       end
 
       def formatted_row_from(row_values)
-        padded_values = row_values.each_with_index.map do |value, index|
-          value.ljust(column_widths[index])
-        end
-
-        padded_values.join(" | ") << " |"
+        row_format_string % row_values
       end
 
       def headers
         @headers ||= @examples.first.keys
+      end
+
+      def row_format_string
+        @format_string ||=
+          column_widths.map do |w|
+            "%-#{w}s"
+          end.join(' | ') << " |"
       end
 
       def column_widths
