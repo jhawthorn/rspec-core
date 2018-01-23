@@ -126,7 +126,7 @@ module RSpec
       end
 
       def spec_file_from(ex_id)
-        ex_id.split("[").first
+        ex_id[0, ex_id.index("[")]
       end
 
       def sort_value_from(example)
