@@ -121,7 +121,16 @@ module RSpec
       # @private
       def self.parse_id(id)
         # http://rubular.com/r/OMZSAPcAfn
-        id.match(/\A(.*?)(?:\[([\d\s:,]+)\])?\z/).captures
+        #
+        # This could be implemented as
+        #     id.match(/\A(.*?)(?:\[([\d\s:,]+)\])?\z/).captures
+        # but for better performance we search for the end of the match and
+        # then reconstruct the first.
+        if id =~ /\[([\d\s:,]+)\]\z/
+          [$`, $1]
+        else
+          [id, nil]
+        end
       end
 
       # Duplicates the example and overrides metadata with the provided
