@@ -131,7 +131,7 @@ module RSpec
 
       def sort_value_from(example)
         file, scoped_id = Example.parse_id(example.fetch(:example_id))
-        [file, *scoped_id.split(":").map(&method(:Integer))]
+        scoped_id.split(":".freeze).map!(&:to_i).unshift(file)
       end
     end
 
